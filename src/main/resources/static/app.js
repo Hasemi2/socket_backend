@@ -17,6 +17,7 @@ function connect() {
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
         setConnected(true);
+        //undefined 뜨는데..
         console.log('Connected: ' + frame);
         stompClient.subscribe('/topic/chat', function (greeting) {
             //console.log(greeting);
