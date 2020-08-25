@@ -13,14 +13,14 @@ import java.util.List;
 @Service
 public class ChatRoomService {
 
-    private final ChatRoomRepository chatRoomRepository;
-
-    @Transactional
-    public Long save(ChatRoomSaveRequestDto requestDto) {
-        return chatRoomRepository.save(requestDto.toEntity()).getRoomId();
-    }
-
-    public List<ChatRoom> findAll() {
-        return chatRoomRepository.findAll();
-    }
+//    //private final ChatRoomRepository chatRoomRepository;
+//
+//    @Transactional
+//    public Long save(ChatRoomSaveRequestDto requestDto) {
+//      //  return chatRoomRepository.save(requestDto.toEntity()).getRoomId();
+//    }
+//
+//    public List<ChatRoom> findAll() {
+//        //return chatRoomRepository.findAll();
+//    }
 }

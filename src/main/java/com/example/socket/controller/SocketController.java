@@ -3,6 +3,7 @@ package com.example.socket.controller;
 import com.example.dto.ChatRoomSaveRequestDto;
 import com.example.socket.domain.Chat;
 import com.example.socket.domain.ChatRoom;
+import com.example.socket.domain.TestChat;
 import com.example.socket.service.ChatRoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +29,7 @@ import java.util.Map;
 @Controller
 public class SocketController {
 
-    private final ChatRoomService chatRoomService;
+    //private final ChatRoomService chatRoomService;
 
     @Autowired
     private SimpMessagingTemplate brokerMessagingTemplate;
@@ -40,24 +41,26 @@ public class SocketController {
         return "list";
     }
 
-    @PostMapping("/create")
-    @ResponseBody
-    public Long create(@RequestBody ChatRoomSaveRequestDto chatRoomSaveRequestDto) {
-        return chatRoomService.save(chatRoomSaveRequestDto);
-    }
+//    @PostMapping("/create")
+//    @ResponseBody
+//    public Long create(@RequestBody ChatRoomSaveRequestDto chatRoomSaveRequestDto) {
+//        return chatRoomService.save(chatRoomSaveRequestDto);
+//    }
 
     //채팅방 데이터 구조 name, id, createdDate, 채팅내역
     //app/roomLists
     @MessageMapping("/roomLists")
     @SendTo("/topic/roomLists")
-    public List<ChatRoom> roomLists(@Payload Chat param) throws Exception {
-
-        log.info("param.getName() ===> " , param.getName());
+    public List<ChatRoom> roomLists(@Payload TestChat param) throws Exception {
+    	
+    	System.out.println("=>" + param.getName());
+        System.out.println("=>" + param.getMessage());
+        System.out.println("=>" + param.toString());
 
         List<ChatRoom> rooms = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            ChatRoom chatRoom = ChatRoom.builder().roomName("test " + i).roomId((long) i).build();
-            rooms.add(chatRoom);
+            //ChatRoom chatRoom = ChatRoom.builder().roomName("test " + i).roomId((long) i).build();
+            //rooms.add(chatRoom);
         }
 
         return rooms;

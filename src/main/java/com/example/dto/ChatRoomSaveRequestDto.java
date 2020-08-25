@@ -18,9 +18,9 @@ public class ChatRoomSaveRequestDto {
         this.roomName = roomName;
     }
 
-    public ChatRoom toEntity() {
-        return ChatRoom.builder()
-                .roomName(roomName)
-                .build();
-    }
+//    public ChatRoom toEntity() {
+//        return ChatRoom.builder()
+//                .roomName(roomName)
+//                .build();
+//    }
 }
