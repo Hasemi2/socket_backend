@@ -1,11 +1,9 @@
-package com.example.dto;
+package com.chat.realtime.web.dto;
 
-import com.example.socket.domain.ChatRoom;
+import com.chat.realtime.domain.room.ChatRoom;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
@@ -18,9 +16,9 @@ public class ChatRoomSaveRequestDto {
         this.roomName = roomName;
     }
 
-//    public ChatRoom toEntity() {
-//        return ChatRoom.builder()
-//                .roomName(roomName)
-//                .build();
-//    }
+    public ChatRoom toEntity() {
+        return ChatRoom.builder()
+                .roomName(roomName)
+                .build();
+    }
 }

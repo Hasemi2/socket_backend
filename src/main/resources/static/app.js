@@ -20,24 +20,24 @@ function onError(error) {
 
 //***********************************************************************************
 
-//function create() {
-// var data ={
-//            roomName: $("#roomName").val()
-//        };
-//
-//            $.ajax({
-//                type:'POST',
-//                url : '/create',
-//                dataType: 'json',
-//                contentType : 'application/json; charset=utf-8',
-//                data: JSON.stringify(data)
-//            }).done(function(res){
-//                alert("등록 완료");
-//                window.location.href  = '/';
-//            }).fail(function(e){
-//                alert(JSON.stringify(e));
-//            });
-//}
+function create() {
+ var data ={
+            roomName: $("#roomName").val()
+        };
+
+            $.ajax({
+                type:'POST',
+                url : '/create',
+                dataType: 'json',
+                contentType : 'application/json; charset=utf-8',
+                data: JSON.stringify(data)
+            }).done(function(res){
+                alert("등록 완료");
+                window.location.href  = '/';
+            }).fail(function(e){
+                alert(JSON.stringify(e));
+            });
+}
 
 //function disconnect() {
 //    if (stompClient !== null) {
@@ -65,7 +65,7 @@ function ChatRoomAll(){
     }
     //todo :요기서 data를 넘겨서 컨트롤러에서 받는게 안됩니다. 왜죠?
     //(void) send(destination, headers = {} , body = '')
-    stompClient.send("/app/roomLists",
+    stompClient.send("/message/roomLists",
         {},
         JSON.stringify(data)
         );
@@ -75,6 +75,7 @@ function onChatRoomAllReceived(payload){
     console.log("onChatRoomAllReceived=======================");
     //console.log("payload ===== " , payload);
     var rooms = JSON.parse(payload.body);
+    $("#chatrooms").empty();
     rooms.forEach(function(el){
         $("#chatrooms").append("<tr><td>" + el.roomName + "</td></tr>");
     });
@@ -90,5 +91,11 @@ function ChatRoomMine(){
 
 
 $(function () {
-      connect();
+        $("form").on('submit' , function(e) {
+            e.preventDefault();
+        });
+        connect();
+       $( "#create" ).click(function() { create(); });
+
 });
+

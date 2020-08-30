@@ -1,4 +1,4 @@
-package com.example.socket.domain;
+package com.chat.realtime.domain.chat;
 
 import lombok.Builder;
 import lombok.Getter;

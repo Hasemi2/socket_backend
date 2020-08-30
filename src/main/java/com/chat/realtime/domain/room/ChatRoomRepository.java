@@ -1,6 +1,5 @@
-package com.example.socket.repository;
+package com.chat.realtime.domain.room;
 
-import com.example.socket.domain.ChatRoom;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ChatRoomRepository extends JpaRepository<ChatRoom , Long> {
