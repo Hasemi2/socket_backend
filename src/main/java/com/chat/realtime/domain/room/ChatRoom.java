@@ -11,6 +11,7 @@ import javax.persistence.*;
 // TODO: 2020-08-30 json 필드 추가하기
 @Getter
 @NoArgsConstructor
+@Table(name = "TB_CHAT_ROOM")
 @Entity
 public class ChatRoom extends BaseTimeEntity {
 

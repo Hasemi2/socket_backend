@@ -33,11 +33,11 @@ public class ChatRoomController {
     }
 
     /**
-     * 채팅방 리스트 요청
+     * 유저가 참여해 있는 채팅방 리스트 요청
      * @return
      * @throws Exception
      */
-    @MessageMapping("/roomLists")
+    @MessageMapping("/room/list/get")
     @SendTo("/topic/room")
     public List<ChatRoom> roomLists() throws Exception {
         List<ChatRoom> chatRooms = chatRoomService.findAll();
