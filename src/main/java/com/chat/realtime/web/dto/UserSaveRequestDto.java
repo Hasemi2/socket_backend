@@ -12,23 +12,16 @@ public class UserSaveRequestDto {
 
     private String userId;
 
-    private String password;
+    private String pw;
 
     private String userToken;
 
     private LocalDateTime tokenExpiredTime;
 
-
-    @Builder
-    public UserSaveRequestDto(String userId, String password) {
-        this.userId = userId;
-        this.password = password;
-    }
-
     @Builder
     public UserSaveRequestDto(String userId, String password, String userToken, LocalDateTime tokenExpiredTime) {
         this.userId = userId;
-        this.password = password;
+        this.pw = password;
         this.userToken = userToken;
         this.tokenExpiredTime = tokenExpiredTime;
     }
@@ -36,8 +29,9 @@ public class UserSaveRequestDto {
     public User toEntity() {
         return User.builder()
                 .userId(userId)
-                .password(password)
+                .password(pw)
                 .userToken(userToken)
+                .tokenExpiredTime(tokenExpiredTime)
                 .build();
     }
 }

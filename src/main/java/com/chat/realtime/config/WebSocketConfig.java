@@ -1,7 +1,11 @@
 package com.chat.realtime.config;
 
 import com.chat.realtime.web.interceptor.HttpHandshakeInterceptor;
+import com.chat.realtime.web.interceptor.RmeSessionChannelInterceptor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
@@ -10,8 +14,8 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 /**
  * Configure Spring for STOMP messaging
  * Stomp : Simple Text Oriented Messaging Protocol 단순 텍스트 지향 메세지 프로토콜
- *
  */
+@Slf4j
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
@@ -28,4 +32,13 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/test").addInterceptors(new HttpHandshakeInterceptor()).setAllowedOrigins("*").withSockJS(); //클라이언트가 접속할 웹 소켓 주소, CORS 허용
     }
 
+    @Override
+    public void configureClientInboundChannel(ChannelRegistration registration) {
+        registration.setInterceptors(rmeSessionChannelInterceptor());
+    }
+
+    @Bean
+    public RmeSessionChannelInterceptor rmeSessionChannelInterceptor() {
+        return new RmeSessionChannelInterceptor();
+    }
 }

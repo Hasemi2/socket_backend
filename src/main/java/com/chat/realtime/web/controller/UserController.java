@@ -18,6 +18,7 @@ public class UserController {
 
     @PostMapping("/login")
     public UserSaveResponseDto login(@RequestBody UserSaveRequestDto requestDto) throws Exception {
+        log.info(requestDto.toString());
         return userService.login(requestDto);
     }
 }

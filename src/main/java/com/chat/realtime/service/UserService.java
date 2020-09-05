@@ -31,26 +31,29 @@ public class UserService {
     public UserSaveResponseDto login(UserSaveRequestDto requestDto) throws Exception {
 
         String userId = requestDto.getUserId();
-        String password = sha256Util.getEncrypt(requestDto.getPassword());
+        String password = sha256Util.getEncrypt(requestDto.getPw());
         String newToken = jwtUtil.createToken(userId);
 
-        Optional<User> user = userRepository.findByUserId(userId);
+        Optional<User> loginUser = userRepository.findByUserIdAndPassword(userId, password);
+        if (loginUser.isPresent()) {
+            loginUser.get().update(newToken, jwtUtil.getExpiredTime(newToken));
+            return new UserSaveResponseDto(loginUser.get());
+        } else if (isJoinedUser(userId)) {
+            throw new IllegalArgumentException("비밀번호를 확인해주세요.");
+        } else {
+            return new UserSaveResponseDto(
+                    userRepository.save(
+                            UserSaveRequestDto.builder()
+                                    .userId(userId)
+                                    .password(password)
+                                    .userToken(newToken)
+                                    .tokenExpiredTime(jwtUtil.getExpiredTime(newToken))
+                                    .build().toEntity())
+            );
+        }
+    }
 
-        user.ifPresent(dbUser -> {
-            userRepository.findByUserIdAndPassword(userId, password).orElseThrow(() -> new IllegalArgumentException("비밀번호를 확인해주세요."));
-        });
-
-        User loginUser = userRepository.findByUserIdAndPassword(userId, password).
-                orElseGet(
-                        () -> userRepository.save(
-                                UserSaveRequestDto.builder()
-                                        .userId(userId)
-                                        .password(password)
-                                        .userToken(newToken)
-                                        .tokenExpiredTime(jwtUtil.getExpiredTime(newToken))
-                                        .build().toEntity())
-                ).update(newToken, jwtUtil.getExpiredTime(newToken));
-
-        return new UserSaveResponseDto(loginUser);
+    private boolean isJoinedUser(String userId) {
+        return userRepository.findByUserId(userId).isPresent();
     }
 }
