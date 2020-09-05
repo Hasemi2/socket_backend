@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserSaveResponseDto {
 
-    private String userToken;
+    private String authToken;
 
     public UserSaveResponseDto(User user) {
-        this.userToken = user.getUserToken();
+        this.authToken = user.getUserToken();
     }
 }

@@ -34,6 +34,9 @@ public class UserService {
         String password = sha256Util.getEncrypt(requestDto.getPw());
         String newToken = jwtUtil.createToken(userId);
 
+        log.info("===============> " + jwtUtil.isValidToken(newToken));
+        log.info("newToken ==================> " + newToken);
+
         Optional<User> loginUser = userRepository.findByUserIdAndPassword(userId, password);
         if (loginUser.isPresent()) {
             loginUser.get().update(newToken, jwtUtil.getExpiredTime(newToken));

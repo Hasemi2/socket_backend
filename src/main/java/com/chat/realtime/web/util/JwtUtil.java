@@ -35,6 +35,7 @@ public class JwtUtil {
     }
 
     public boolean isValidToken(String token) {
+        log.info("token " + token);
         try {
             Claims claims = getClaims(token);
             log.info("expireTime :" + claims.getExpiration());

@@ -41,4 +41,5 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public RmeSessionChannelInterceptor rmeSessionChannelInterceptor() {
         return new RmeSessionChannelInterceptor();
     }
+
 }
