@@ -1,8 +1,6 @@
 package com.chat.realtime.web.interceptor;
 
 import com.chat.realtime.web.util.JwtUtil;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
@@ -11,6 +9,9 @@ import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.util.MultiValueMap;
+
+import java.util.List;
+import java.util.Set;
 
 @Slf4j
 public class RmeSessionChannelInterceptor implements ChannelInterceptor {
@@ -32,9 +33,18 @@ public class RmeSessionChannelInterceptor implements ChannelInterceptor {
         log.info("multiValueMap.toString() " + multiValueMap.toString());
         log.info("Authorization => " + multiValueMap.get("Authorization"));
 
-        String token = multiValueMap.get("Authorization").toString();
+        Set<String> keys = multiValueMap.keySet();
 
-        log.info("jwtUtil.isValidToken()  " + jwtUtil.isValidToken(token));
+        for (String key : keys) {
+            System.out.println("Key = " + key);
+            System.out.println("Values = " + multiValueMap.get(key));
+            List<String> list = (List<String>) multiValueMap.get(key);
+            String token = list.get(0);
+            log.info("jwtUtil.isValidToken()  " + jwtUtil.isValidToken(token));
+        }
+
+
+
 
         return message;
     }

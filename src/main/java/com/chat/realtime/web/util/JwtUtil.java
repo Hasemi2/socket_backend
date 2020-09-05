@@ -59,6 +59,9 @@ public class JwtUtil {
     }
 
     private Claims getClaims(String token) {
+        log.info("getClaims ============================================== " + Jwts.parser()
+                .setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY))
+                .parseClaimsJws(token).getBody().toString());
         return Jwts.parser()
                 .setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY))
                 .parseClaimsJws(token).getBody();

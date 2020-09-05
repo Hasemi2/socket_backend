@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -54,6 +55,10 @@ public class UserService {
                                     .build().toEntity())
             );
         }
+    }
+
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 
     private boolean isJoinedUser(String userId) {
