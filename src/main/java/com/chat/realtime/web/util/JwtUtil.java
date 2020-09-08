@@ -26,7 +26,6 @@ public class JwtUtil {
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
         byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(SECRET_KEY);
         Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
-        log.info("들어옴");
         return Jwts.builder()
                 .setExpiration(new Date(EXPIRED_MILLIS))
                 .claim("id", userId)
@@ -54,14 +53,11 @@ public class JwtUtil {
     }
 
     public LocalDateTime getExpiredTime(String token) {
-        return  LocalDateTime.ofInstant(getClaims(token).getExpiration().toInstant(),
+        return LocalDateTime.ofInstant(getClaims(token).getExpiration().toInstant(),
                 ZoneId.systemDefault());
     }
 
     private Claims getClaims(String token) {
-        log.info("getClaims ============================================== " + Jwts.parser()
-                .setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY))
-                .parseClaimsJws(token).getBody().toString());
         return Jwts.parser()
                 .setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY))
                 .parseClaimsJws(token).getBody();
