@@ -1,24 +1,22 @@
 package com.chat.realtime.web.dto;
 
+import com.chat.realtime.domain.chat.Chat;
 import com.chat.realtime.domain.room.ChatRoom;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Getter
+@Data
 @NoArgsConstructor
 public class ChatRoomSaveRequestDto {
 
-    private String roomName;
+    private String receiver;
+    private String userToken;
 
     @Builder
-    public ChatRoomSaveRequestDto(String roomName) {
-        this.roomName = roomName;
+    public ChatRoomSaveRequestDto(String receiver, String userToken) {
+        this.receiver = receiver;
+        this.userToken = userToken;
     }
 
-    public ChatRoom toEntity() {
-        return ChatRoom.builder()
-                .roomName(roomName)
-                .build();
-    }
 }

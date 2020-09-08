@@ -52,33 +52,20 @@ function create() {
 function ChatRoomAll(){
    console.log("ChatRoomAll ============================== ")
    //구독
-   stompClient.subscribe('/topic/roomLists', onChatRoomAllReceived);
+   stompClient.subscribe('/topic/room', onChatRoomAllReceived);
     // Tell your username to the server
-//    var data = {
-//        type : 'chatRoomAll',
-//        sender : 'semi'
-//    }
-
-    var data = {
-        'name'      : 'chatRoomAll',
-        'message'   : 'semi'
-    }
     //todo :요기서 data를 넘겨서 컨트롤러에서 받는게 안됩니다. 왜죠?
     //(void) send(destination, headers = {} , body = '')
-    stompClient.send("/message/roomLists",
-        {},
-        JSON.stringify(data)
+    stompClient.send("/room/roomList/get" ,
+        {"Authorization" : "eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MDAwMDIzMTYsImlkIjoiaGFzZW1pIn0.XII2Z6X96oUma1Uc0uyGp68OuZT840U1ny3sT0f_PCE" } ,
+       JSON.stringify( {"receiver" : "hasemi"})
         );
 }
 
 function onChatRoomAllReceived(payload){
     console.log("onChatRoomAllReceived=======================");
-    //console.log("payload ===== " , payload);
     var rooms = JSON.parse(payload.body);
-    $("#chatrooms").empty();
-    rooms.forEach(function(el){
-        $("#chatrooms").append("<tr><td>" + el.roomName + "</td></tr>");
-    });
+    console.log(rooms);
 }
 
 //현재 접속자 보기(유저 인증값 불필요)
