@@ -27,23 +27,22 @@ public class FilterChannelInterceptor implements ChannelInterceptor {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(message);
 
         log.info("full message:" + message);
-
         if (StompCommand.CONNECT.equals(headerAccessor.getCommand())) {
             log.info("CONNECT ==================================");
             log.info("auth:" + headerAccessor.getNativeHeader("Authorization"));
+
             MultiValueMap<String, String> multiValueMap = headers.get(StompHeaderAccessor.NATIVE_HEADERS, MultiValueMap.class);
-
-            List<String> list = (List<String>) multiValueMap.get("Authorization");
-            String token = list.get(0);
-
-            // TODO: 2020-09-09 개발 임시 삭제 예정
-            if ("SUPER_TOKEN".equals(token)) {
-                return message;
-            }
-
-            if (!jwtUtil.isValidToken(token)) {
-                throw new CommonException(401, "유효한 토큰이 아닙니다.");
-            }
+//            List<String> list = (List<String>) multiValueMap.get("Authorization");
+//            String token = list.get(0);
+//
+//            // TODO: 2020-09-09 개발 임시 삭제 예정
+//            if ("SUPER_TOKEN".equals(token)) {
+//                return message;
+//            }
+//
+//            if (!jwtUtil.isValidToken(token)) {
+//                throw new CommonException(401, "유효한 토큰이 아닙니다.");
+//            }
 
         } else if (StompCommand.SUBSCRIBE.equals(headerAccessor.getCommand())) {
             log.info("SUBSCRIBE ==================================");

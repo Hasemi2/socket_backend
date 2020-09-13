@@ -5,12 +5,13 @@ function connect() {
     //여기서 인증정보 넣고여기서
     var socket = new SockJS('/test');
     stompClient = Stomp.over(socket);
-    stompClient.connect({}, onConnected, onError);
+    stompClient.connect({"test" : "test"}, onConnected, onError)
+
 }
 
-function onConnected() {
-    console.log("onConnected ================================= ");
-    ChatRoomAll(); //모든 채팅방 리스트 호출
+function onConnected(payload) {
+    console.log("onConnected " , payload);
+    //ChatRoomAll(); //모든 채팅방 리스트 호출
 
 }
 
@@ -56,7 +57,7 @@ function ChatRoomAll(){
     // Tell your username to the server
     //todo :요기서 data를 넘겨서 컨트롤러에서 받는게 안됩니다. 왜죠?
     //(void) send(destination, headers = {} , body = '')
-    stompClient.send("/room/roomList/get" ,
+    stompClient.send("/room/add" ,
         {"Authorization" : "eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MDAwMDIzMTYsImlkIjoiaGFzZW1pIn0.XII2Z6X96oUma1Uc0uyGp68OuZT840U1ny3sT0f_PCE" } ,
        JSON.stringify( {"receiver" : "hasemi"})
         );
@@ -82,7 +83,7 @@ $(function () {
             e.preventDefault();
         });
         connect();
-       $( "#create" ).click(function() { create(); });
+      // $( "#create" ).click(function() { create(); });
 
 });
 

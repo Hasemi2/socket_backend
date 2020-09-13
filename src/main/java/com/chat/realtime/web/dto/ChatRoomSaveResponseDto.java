@@ -1,13 +1,8 @@
 package com.chat.realtime.web.dto;
 
-import com.chat.realtime.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @NoArgsConstructor
 @Getter
@@ -15,14 +10,30 @@ public class ChatRoomSaveResponseDto {
 
     private String dataType;
 
-    private Map<String, Object> data;
+    private Data data;
 
     @Builder
-    public ChatRoomSaveResponseDto(String dataType, Long roomId, String myId, String receiver ) {
+    public ChatRoomSaveResponseDto(String dataType, Data data) {
         this.dataType = dataType;
-        this.data = new HashMap<>();
-        data.put("roomId" , roomId);
-        data.put("myId" , myId);
-        data.put("receiver" , receiver);
+        this.data = data;
     }
+
+    @NoArgsConstructor
+    @Getter
+    public static class Data {
+
+        private Long roomId;
+
+        private String myId;
+
+        private String receiver;
+
+        @Builder
+        public Data(Long roomId, String myId, String receiver) {
+            this.roomId = roomId;
+            this.myId = myId;
+            this.receiver = receiver;
+        }
+    }
+
 }

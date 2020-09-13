@@ -5,9 +5,7 @@ import com.chat.realtime.domain.mapping.UserChatRoomRepository;
 import com.chat.realtime.domain.room.ChatRoom;
 import com.chat.realtime.domain.room.ChatRoomRepository;
 import com.chat.realtime.domain.user.UserRepository;
-import com.chat.realtime.web.dto.ChatRoomListResponseDto;
-import com.chat.realtime.web.dto.ChatRoomSaveRequestDto;
-import com.chat.realtime.web.dto.ChatRoomSaveResponseDto;
+import com.chat.realtime.web.dto.*;
 import com.chat.realtime.web.dto.type.DataType;
 import com.chat.realtime.web.exception.CommonException;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -38,7 +35,7 @@ public class ChatRoomService {
     }
 
     @Transactional
-    public ChatRoomSaveResponseDto save(ChatRoomSaveRequestDto requestDto) {
+    public ChatRoomSaveResponseDto addRoom(ChatRoomSaveRequestDto requestDto) {
 
         ChatRoom chatRoom = chatRoomRepository.save(ChatRoom.builder().build());
 
@@ -61,11 +58,24 @@ public class ChatRoomService {
 
 
         return ChatRoomSaveResponseDto.builder()
-                .roomId(chatRoom.getRoomId())
                 .dataType(DataType.ADD_ROOM.getDataType())
-                .myId(myId)
-                .receiver(receiverId)
+                .data(ChatRoomSaveResponseDto
+                        .Data.builder()
+                        .myId(myId)
+                        .receiver(receiverId)
+                        .roomId(chatRoom.getRoomId())
+                        .build())
                 .build();
     }
 
+    @Transactional
+    public ChatRoomLeaveResponseDto leaveRoom(ChatRoomLeaveRequestDto requestDto) {
+        //매핑 테이블 삭제
+
+        //매핑테이블에 조회 안될시 roomtable delete
+
+        //채팅방 정보-> 채팅방 아이디, 채팅방 참여인원등의 정보 || 참여인원이 0명일시 null 리턴
+        
+        return null;
+    }
 }

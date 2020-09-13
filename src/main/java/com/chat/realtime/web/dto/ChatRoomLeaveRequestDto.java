@@ -6,14 +6,14 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class ChatRoomSaveRequestDto {
+public class ChatRoomLeaveRequestDto {
 
-    private String receiver;
+    private String roomId;
     private String userToken;
 
     @Builder
-    public ChatRoomSaveRequestDto(String receiver, String userToken) {
-        this.receiver = receiver;
+    public ChatRoomLeaveRequestDto(String roomId, String userToken) {
+        this.roomId = roomId;
         this.userToken = userToken;
     }
 
