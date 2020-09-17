@@ -3,15 +3,15 @@ var stompClient = null;
 //Socket 연결 *********************************************************************
 function connect() {
     //여기서 인증정보 넣고여기서
-    var socket = new SockJS('/test');
+    var socket = new SockJS('/test?Authorization=SUPER_TOKEN');
     stompClient = Stomp.over(socket);
-    stompClient.connect({"test" : "test"}, onConnected, onError)
+    stompClient.connect({} , onConnected, onError)
 
 }
 
 function onConnected(payload) {
     console.log("onConnected " , payload);
-    //ChatRoomAll(); //모든 채팅방 리스트 호출
+    ChatRoomAll(); //모든 채팅방 리스트 호출
 
 }
 
@@ -20,25 +20,6 @@ function onError(error) {
 }
 
 //***********************************************************************************
-
-function create() {
- var data ={
-            roomName: $("#roomName").val()
-        };
-
-            $.ajax({
-                type:'POST',
-                url : '/create',
-                dataType: 'json',
-                contentType : 'application/json; charset=utf-8',
-                data: JSON.stringify(data)
-            }).done(function(res){
-                alert("등록 완료");
-                window.location.href  = '/';
-            }).fail(function(e){
-                alert(JSON.stringify(e));
-            });
-}
 
 //function disconnect() {
 //    if (stompClient !== null) {
@@ -53,14 +34,17 @@ function create() {
 function ChatRoomAll(){
    console.log("ChatRoomAll ============================== ")
    //구독
-   stompClient.subscribe('/topic/room', onChatRoomAllReceived);
+   stompClient.subscribe('/topic/user', onChatRoomAllReceived);
     // Tell your username to the server
     //todo :요기서 data를 넘겨서 컨트롤러에서 받는게 안됩니다. 왜죠?
     //(void) send(destination, headers = {} , body = '')
-    stompClient.send("/room/add" ,
+    stompClient.send("/user/sessionId/get" ,
         {"Authorization" : "eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MDAwMDIzMTYsImlkIjoiaGFzZW1pIn0.XII2Z6X96oUma1Uc0uyGp68OuZT840U1ny3sT0f_PCE" } ,
-       JSON.stringify( {"receiver" : "hasemi"})
-        );
+       {});
+
+    stompClient.send("/user/userList/get" ,
+           {"Authorization" : "eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MDAwMDIzMTYsImlkIjoiaGFzZW1pIn0.XII2Z6X96oUma1Uc0uyGp68OuZT840U1ny3sT0f_PCE" } ,
+       {});
 }
 
 function onChatRoomAllReceived(payload){
@@ -69,13 +53,6 @@ function onChatRoomAllReceived(payload){
     console.log(rooms);
 }
 
-//현재 접속자 보기(유저 인증값 불필요)
-function ChatUserAll(){
-}
-
-//참여한 채팅방 보기(user 인증값 필요)
-function ChatRoomMine(){
-}
 
 
 $(function () {

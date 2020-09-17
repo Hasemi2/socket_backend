@@ -15,6 +15,7 @@ import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.socket.messaging.DefaultSimpUserRegistry;
 
 import java.util.Map;
 
@@ -32,6 +33,7 @@ public class UserController {
         return userService.login(requestDto);
     }
 
+    // TODO: 2020-09-17 삭제 
     @MessageMapping("/sessionId/get")
     @SendTo("/topic/user")
     public UserSessionResponseDto getSessionId(SimpMessageHeaderAccessor headerAccessor) {
@@ -42,6 +44,7 @@ public class UserController {
         Map<String, Object> sessionAttributes = headerAccessor.getSessionAttributes();
         sessionAttributes.put("sessionId", sessionId);
         sessionAttributes.put("token", token);
+        log.info("userRegistry : " + simpUserRegistry.getUsers().toString());
 
         return UserSessionResponseDto.builder()
                 .dataType(DataType.SESSION_VALUE.getDataType())
@@ -53,7 +56,8 @@ public class UserController {
 
     @MessageMapping("/userList/get")
     @SendTo("/topic/user")
-    public UserListResponseDto userList() {
+    public UserListResponseDto userList(SimpMessageHeaderAccessor headerAccessor) {
+        log.info("simpUserRegistry.getUsers().toString()" + simpUserRegistry.getUsers().toString());
         return userService.findAll();
     }
 }

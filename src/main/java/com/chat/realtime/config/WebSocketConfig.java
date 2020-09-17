@@ -1,6 +1,7 @@
 package com.chat.realtime.config;
 
 import com.chat.realtime.web.interceptor.FilterChannelInterceptor;
+import com.chat.realtime.web.interceptor.HandshakeHandler;
 import com.chat.realtime.web.interceptor.HttpHandshakeInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -30,7 +31,10 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/test").addInterceptors(new HttpHandshakeInterceptor()).setAllowedOrigins("*").withSockJS(); //클라이언트가 접속할 웹 소켓 주소, CORS 허용
+        registry.addEndpoint("/test")
+                .addInterceptors(new HttpHandshakeInterceptor())
+                .setHandshakeHandler(new HandshakeHandler())
+                .setAllowedOrigins("*").withSockJS(); //클라이언트가 접속할 웹 소켓 주소, CORS 허용
     }
 
     @Override
@@ -42,8 +46,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public FilterChannelInterceptor filterChannelInterceptor() {
         return new FilterChannelInterceptor();
     }
-
-
 
 
 }
