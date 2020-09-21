@@ -1,6 +1,7 @@
 package com.chat.realtime.web.controller;
 
 import com.chat.realtime.service.UserService;
+import com.chat.realtime.web.connect.SocketConnection;
 import com.chat.realtime.web.dto.UserListResponseDto;
 import com.chat.realtime.web.dto.UserSaveRequestDto;
 import com.chat.realtime.web.dto.UserSaveResponseDto;
@@ -30,6 +31,12 @@ public class UserController {
 
     @PostMapping("/login")
     public UserSaveResponseDto login(@RequestBody UserSaveRequestDto requestDto) {
+        UserSaveResponseDto responseDto = userService.login(requestDto);
+
+        Map<String, String> connection = SocketConnection.getInstance();
+        //connection.put(responseDto.getConnectToken(), responseDto.getAuthToken());
+        // TODO: 2020-09-21 개발 임시 
+        connection.put("CONNECT_TOKEN" , "SUPER_TOKEN");
         return userService.login(requestDto);
     }
 

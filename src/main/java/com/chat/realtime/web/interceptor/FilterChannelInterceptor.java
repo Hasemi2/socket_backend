@@ -1,5 +1,6 @@
 package com.chat.realtime.web.interceptor;
 
+import com.chat.realtime.web.exception.CommonException;
 import com.chat.realtime.web.util.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,9 @@ import org.springframework.messaging.support.ChannelInterceptor;
 @Slf4j
 public class FilterChannelInterceptor implements ChannelInterceptor {
 
+//    @Autowired
+//    JwtUtil jwtUtil;
+
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
 
@@ -20,8 +24,20 @@ public class FilterChannelInterceptor implements ChannelInterceptor {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(message);
 
         log.info("full message:" + message);
+
         if (StompCommand.CONNECT.equals(headerAccessor.getCommand())) {
             log.info("CONNECT ==================================");
+//            String token = headerAccessor.getFirstNativeHeader("Authorization");
+//            log.info("Authorization Token : " + token);
+//
+//            if ("SUPER_TOKEN".equals(token)) {
+//                return message;
+//                // TODO: 2020-09-09 개발 임시 삭제 예정
+//            }
+//
+//            if (!jwtUtil.isValidToken(token)) {
+//                throw new CommonException(401, "유효한 토큰이 아닙니다.");
+//            }
 
         } else if (StompCommand.SUBSCRIBE.equals(headerAccessor.getCommand())) {
             log.info("SUBSCRIBE ==================================");

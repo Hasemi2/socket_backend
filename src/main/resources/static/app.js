@@ -1,11 +1,33 @@
 var stompClient = null;
 
 //Socket 연결 *********************************************************************
+function login() {
+
+        var data = {
+            userId : "hasemi",
+            pw : "1234"
+        }
+
+            $.ajax({
+                type:'POST',
+                url : '/login',
+                dataType: 'json',
+                contentType : 'application/json; charset=utf-8',
+                data: JSON.stringify(data)
+            }).done(function(res){
+                console.log("login test => " , res);
+                connect();
+            }).fail(function(e){
+                console.log(JSON.stringify(e));
+            });
+}
+
+
 function connect() {
     //여기서 인증정보 넣고여기서
-    var socket = new SockJS('/test?Authorization=SUPER_TOKEN');
+    var socket = new SockJS('/test?connect_token=CONNECT_TOKEN');
     stompClient = Stomp.over(socket);
-    stompClient.connect({} , onConnected, onError)
+    stompClient.connect({"Authorization" : "SUPER_TOKEN"} , onConnected, onError)
 
 }
 
@@ -38,9 +60,9 @@ function ChatRoomAll(){
     // Tell your username to the server
     //todo :요기서 data를 넘겨서 컨트롤러에서 받는게 안됩니다. 왜죠?
     //(void) send(destination, headers = {} , body = '')
-    stompClient.send("/user/sessionId/get" ,
-        {"Authorization" : "eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MDAwMDIzMTYsImlkIjoiaGFzZW1pIn0.XII2Z6X96oUma1Uc0uyGp68OuZT840U1ny3sT0f_PCE" } ,
-       {});
+//    stompClient.send("/user/sessionId/get" ,
+//        {"Authorization" : "eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MDAwMDIzMTYsImlkIjoiaGFzZW1pIn0.XII2Z6X96oUma1Uc0uyGp68OuZT840U1ny3sT0f_PCE" } ,
+//       {});
 
     stompClient.send("/user/userList/get" ,
            {"Authorization" : "eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MDAwMDIzMTYsImlkIjoiaGFzZW1pIn0.XII2Z6X96oUma1Uc0uyGp68OuZT840U1ny3sT0f_PCE" } ,
@@ -59,7 +81,7 @@ $(function () {
         $("form").on('submit' , function(e) {
             e.preventDefault();
         });
-        connect();
+        login();
       // $( "#create" ).click(function() { create(); });
 
 });

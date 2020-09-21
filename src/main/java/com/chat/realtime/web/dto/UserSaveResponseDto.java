@@ -10,7 +10,10 @@ public class UserSaveResponseDto {
 
     private String authToken;
 
-    public UserSaveResponseDto(User user) {
+    private String connectToken;
+
+    public UserSaveResponseDto(User user, String connectToken) {
         this.authToken = user.getUserToken();
+        this.connectToken = connectToken;
     }
 }

@@ -1,7 +1,6 @@
 package com.chat.realtime.web.util;
 
 import io.jsonwebtoken.*;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +10,7 @@ import java.security.Key;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.UUID;
 
 @Component
 @Slf4j
@@ -18,18 +18,41 @@ public class JwtUtil {
 
     private String SECRET_KEY = "TEST_KEY";
 
-    long EXPIRED_MILLIS = System.currentTimeMillis() + 36000000 * 12;
+    long USER_AUTH_EXPIRED_MILLIS = System.currentTimeMillis() + 36000000 * 12;
+
+    long CONNECT_EXPIRED_MILLIS = 60000; //60초
 
     private Key secretKey;
 
-    public String createToken(String userId) {
+    /**
+     * User 인증
+     * @param userId
+     * @return
+     */
+    public String createUserAuthToken(String userId) {
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
         byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(SECRET_KEY);
         Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
         return Jwts.builder()
-                .setExpiration(new Date(EXPIRED_MILLIS))
+                .setExpiration(new Date(USER_AUTH_EXPIRED_MILLIS))
                 .claim("id", userId)
                 .signWith(SignatureAlgorithm.HS256, signingKey)
+                .compact();
+    }
+
+    /**
+     * socket connect 인증용 토큰
+     * 만료시간 : 30초
+     * @return
+     */
+    public String createConnectToken() {
+        SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
+        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(SECRET_KEY);
+        Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
+        return Jwts.builder()
+                .setExpiration(new Date(CONNECT_EXPIRED_MILLIS))
+                .signWith(SignatureAlgorithm.HS256, signingKey)
+                .claim("uuid", UUID.randomUUID().toString()) // TODO: 2020-09-21  길이 짧은 토큰 발급이 좋을듯
                 .compact();
     }
 

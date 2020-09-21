@@ -1,7 +1,7 @@
 package com.chat.realtime.config;
 
 import com.chat.realtime.web.interceptor.FilterChannelInterceptor;
-import com.chat.realtime.web.interceptor.HandshakeHandler;
+import com.chat.realtime.web.handler.HandshakeHandler;
 import com.chat.realtime.web.interceptor.HttpHandshakeInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;

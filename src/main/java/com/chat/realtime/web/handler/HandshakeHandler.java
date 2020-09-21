@@ -1,5 +1,6 @@
-package com.chat.realtime.web.interceptor;
+package com.chat.realtime.web.handler;
 
+import com.chat.realtime.web.connect.SocketConnection;
 import com.chat.realtime.web.controller.RoleUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.server.ServerHttpRequest;
@@ -31,12 +32,18 @@ public class HandshakeHandler extends DefaultHandshakeHandler {
         log.info("determineUser =============================== ");
         ServletServerHttpRequest servletRequest = (ServletServerHttpRequest) request;
         HttpServletRequest httpServletRequest = servletRequest.getServletRequest();
-        String sessionId = httpServletRequest.getSession().getId();
-        String token = httpServletRequest.getParameter("Authorization");
-        log.info("sessionId : " + sessionId);
-        log.info("parameter? " + httpServletRequest.getParameter("Authorization"));
-        log.info("QueryString? " + httpServletRequest.getQueryString());
-        return new RoleUser(token);
-    }
 
+        String sessionId = httpServletRequest.getSession().getId();
+        String connectToken = httpServletRequest.getParameter("connect_token");
+        log.info("sessionId : " + sessionId);
+        log.info("connectToken : " + connectToken);
+        String authToken = SocketConnection.getInstance().get(connectToken);
+        log.info("authToken : " + authToken);
+        log.info("before : " + SocketConnection.getInstance().toString());
+        RoleUser user = new RoleUser(authToken); // 유저 권한 생성후
+        SocketConnection.getInstance().remove(connectToken); //해당 임시 토큰 데이터 삭제
+        log.info("after : " + SocketConnection.getInstance().toString());
+        return new RoleUser(authToken);
+
+    }
 }

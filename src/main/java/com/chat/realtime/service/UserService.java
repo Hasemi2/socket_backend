@@ -40,12 +40,12 @@ public class UserService {
             throw new CommonException(500, "비밀번호 암호화 중 에러 발생");
         }
 
-        String newToken = jwtUtil.createToken(userId);
+        String newToken = jwtUtil.createUserAuthToken(userId);
 
         Optional<User> loginUser = userRepository.findByUserIdAndPassword(userId, password);
         if (loginUser.isPresent()) {
             loginUser.get().update(newToken, jwtUtil.getExpiredTime(newToken));
-            return new UserSaveResponseDto(loginUser.get());
+            return new UserSaveResponseDto(loginUser.get(), jwtUtil.createConnectToken());
         } else if (isJoinedUser(userId)) {
             throw new CommonException(401, "비밀번호 확인");
         } else {
@@ -57,6 +57,7 @@ public class UserService {
                                     .userToken(newToken)
                                     .tokenExpiredTime(jwtUtil.getExpiredTime(newToken))
                                     .build().toEntity())
+                    , jwtUtil.createConnectToken()
             );
         }
     }
