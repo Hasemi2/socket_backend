@@ -30,25 +30,25 @@ public class TokenMapper {
     public static String get(String connectToken) {
         // TODO: 2020-09-21 개발임시
         if (connectToken.equals("CONNECT_TOKEN")) {
-            return TokenMapper.getInstance().get(connectToken);
+            return getInstance().get(connectToken);
         }
 
         if (!jwtUtil.isValidToken(connectToken)) {
             throw new CommonException(401, "커넥트용 인증 토큰 만료시간이 지났습니다.");
         }
-        return TokenMapper.getInstance().get(connectToken);
+        return getInstance().get(connectToken);
     }
 
     public static void set(String connectToken, String authToken) {
-        if (TokenMapper.getInstance().containsKey(connectToken)) {
+        if (getInstance().containsKey(connectToken)) {
             throw new CommonException(401, "인증 실패");
         }
 
-        TokenMapper.getInstance().put(connectToken, authToken);
+        getInstance().put(connectToken, authToken);
     }
 
     public static void remove(String connectToken) {
-        TokenMapper.getInstance().remove(connectToken);
+        getInstance().remove(connectToken);
     }
 
 }
