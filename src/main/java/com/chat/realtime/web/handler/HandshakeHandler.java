@@ -1,6 +1,6 @@
 package com.chat.realtime.web.handler;
 
-import com.chat.realtime.web.connect.SocketConnection;
+import com.chat.realtime.web.connect.TokenMapper;
 import com.chat.realtime.web.controller.RoleUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.server.ServerHttpRequest;
@@ -37,12 +37,15 @@ public class HandshakeHandler extends DefaultHandshakeHandler {
         String connectToken = httpServletRequest.getParameter("connect_token");
         log.info("sessionId : " + sessionId);
         log.info("connectToken : " + connectToken);
-        String authToken = SocketConnection.getInstance().get(connectToken);
+        String authToken = TokenMapper.get(connectToken);
+
         log.info("authToken : " + authToken);
-        log.info("before : " + SocketConnection.getInstance().toString());
+        log.info("before : " + TokenMapper.getInstance().toString());
+
         RoleUser user = new RoleUser(authToken); // 유저 권한 생성후
-        SocketConnection.getInstance().remove(connectToken); //해당 임시 토큰 데이터 삭제
-        log.info("after : " + SocketConnection.getInstance().toString());
+        TokenMapper.remove(connectToken); //해당 임시 토큰 데이터 삭제
+
+        log.info("after : " + TokenMapper.getInstance().toString());
         return new RoleUser(authToken);
 
     }

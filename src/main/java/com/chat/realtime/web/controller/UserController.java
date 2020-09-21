@@ -1,7 +1,7 @@
 package com.chat.realtime.web.controller;
 
 import com.chat.realtime.service.UserService;
-import com.chat.realtime.web.connect.SocketConnection;
+import com.chat.realtime.web.connect.TokenMapper;
 import com.chat.realtime.web.dto.UserListResponseDto;
 import com.chat.realtime.web.dto.UserSaveRequestDto;
 import com.chat.realtime.web.dto.UserSaveResponseDto;
@@ -16,7 +16,6 @@ import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.socket.messaging.DefaultSimpUserRegistry;
 
 import java.util.Map;
 
@@ -33,10 +32,9 @@ public class UserController {
     public UserSaveResponseDto login(@RequestBody UserSaveRequestDto requestDto) {
         UserSaveResponseDto responseDto = userService.login(requestDto);
 
-        Map<String, String> connection = SocketConnection.getInstance();
-        //connection.put(responseDto.getConnectToken(), responseDto.getAuthToken());
+        // TokenMapper.set(responseDto.getConnectToken(), responseDto.getAuthToken());
         // TODO: 2020-09-21 개발 임시 
-        connection.put("CONNECT_TOKEN" , "SUPER_TOKEN");
+        TokenMapper.set("CONNECT_TOKEN" , "SUPER_TOKEN");
         return userService.login(requestDto);
     }
 
