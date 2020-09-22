@@ -20,7 +20,7 @@ public class JwtUtil {
 
     long USER_AUTH_EXPIRED_MILLIS = System.currentTimeMillis() + 36000000 * 12;
 
-    long CONNECT_EXPIRED_MILLIS = 60000; //60초
+    long CONNECT_EXPIRED_MILLIS = System.currentTimeMillis() + 60000; //60초
 
     private Key secretKey;
 
@@ -57,11 +57,11 @@ public class JwtUtil {
     }
 
     public boolean isValidToken(String token) {
-        log.info("token " + token);
+        log.info("isValidToken :  token " + token);
         try {
             Claims claims = getClaims(token);
-            log.info("expireTime :" + claims.getExpiration());
-            log.info("Id :" + claims.get("id"));
+            log.info("isValidToken : expireTime :" + claims.getExpiration());
+            log.info("isValidToken : Id :" + claims.get("id"));
             return true;
         } catch (ExpiredJwtException exception) {
             log.error("Token Expired");

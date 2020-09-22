@@ -32,7 +32,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/test")
-                .addInterceptors(new HttpHandshakeInterceptor())
+                .addInterceptors(httpHandshakeInterceptor())
                 .setHandshakeHandler(new HandshakeHandler())
                 .setAllowedOrigins("*").withSockJS(); //클라이언트가 접속할 웹 소켓 주소, CORS 허용
     }
@@ -47,5 +47,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         return new FilterChannelInterceptor();
     }
 
+    @Bean
+    public HttpHandshakeInterceptor httpHandshakeInterceptor() {
+        return new HttpHandshakeInterceptor();
+    }
 
 }

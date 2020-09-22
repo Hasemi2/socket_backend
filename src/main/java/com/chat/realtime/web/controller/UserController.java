@@ -31,11 +31,10 @@ public class UserController {
     @PostMapping("/login")
     public UserSaveResponseDto login(@RequestBody UserSaveRequestDto requestDto) {
         UserSaveResponseDto responseDto = userService.login(requestDto);
-
-        // TokenMapper.set(responseDto.getConnectToken(), responseDto.getAuthToken());
+        TokenMapper.set(responseDto.getConnectToken(), responseDto.getAuthToken());
         // TODO: 2020-09-21 개발 임시 
-        TokenMapper.set("CONNECT_TOKEN" , "SUPER_TOKEN");
-        return userService.login(requestDto);
+        //TokenMapper.set("CONNECT_TOKEN" , "SUPER_TOKEN");
+        return responseDto;
     }
 
     // TODO: 2020-09-17 삭제 

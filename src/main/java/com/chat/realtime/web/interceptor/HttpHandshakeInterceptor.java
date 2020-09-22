@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpRequest;
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
 
@@ -38,8 +39,8 @@ public class HttpHandshakeInterceptor implements HandshakeInterceptor {
 
         String connectToken = httpServletRequest.getParameter("connect_token");
         log.info("connect_token  : " + connectToken);
-
         String authToken = TokenMapper.get(connectToken);
+        log.info("authToken  : " + authToken);
 
         // TODO: 2020-09-09 개발 임시 삭제 예정
         if ("SUPER_TOKEN".equals(authToken)) {
