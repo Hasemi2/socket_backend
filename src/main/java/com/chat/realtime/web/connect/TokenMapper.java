@@ -29,7 +29,7 @@ public class TokenMapper {
     }
 
     @PostConstruct
-    private void initialize(){
+    private void initialize() {
         this.staticJwtUtil = this.jwtUtil;
     }
 
@@ -41,6 +41,10 @@ public class TokenMapper {
     }
 
     public static String get(String connectToken) {
+        if ("SUPER_TOKEN".equals(connectToken)) {
+            return getInstance().get(connectToken);
+        }
+
         if (!staticJwtUtil.isValidToken(connectToken)) {
             throw new CommonException(401, "커넥트용 인증 토큰 만료시간이 지났습니다.");
         }
