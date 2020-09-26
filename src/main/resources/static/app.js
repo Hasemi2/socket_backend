@@ -16,18 +16,18 @@ function login() {
                 data: JSON.stringify(data)
             }).done(function(res){
                 console.log("login test => " , res);
-                connect();
+                connect(res);
             }).fail(function(e){
                 console.log(JSON.stringify(e));
             });
 }
 
 
-function connect() {
+function connect(res) {
     //여기서 인증정보 넣고여기서
-    var socket = new SockJS('/test?connect_token=CONNECT_TOKEN');
+    var socket = new SockJS('/test?connect_token=' + res.connectToken);
     stompClient = Stomp.over(socket);
-    stompClient.connect({"Authorization" : "SUPER_TOKEN"} , onConnected, onError)
+    stompClient.connect({"Authorization" : res.authToken} , onConnected, onError)
 
 }
 
