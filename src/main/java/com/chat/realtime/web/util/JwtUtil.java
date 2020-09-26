@@ -18,15 +18,15 @@ public class JwtUtil {
 
     private String SECRET_KEY = "TEST_KEY";
 
-    long USER_AUTH_EXPIRED_MILLIS = System.currentTimeMillis() + 36000000 * 12;
+    private long USER_AUTH_EXPIRED_MILLIS = 36000000 * 12;
 
-    long CONNECT_EXPIRED_MILLIS = System.currentTimeMillis() + 60000; //60초
+    private long CONNECT_EXPIRED_MILLIS = 120000; //2분
 
     private Key secretKey;
 
     /**
      * User 인증
-     * @param userId
+     *
      * @return
      */
     public String createUserAuthToken(String userId) {
@@ -34,7 +34,7 @@ public class JwtUtil {
         byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(SECRET_KEY);
         Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
         return Jwts.builder()
-                .setExpiration(new Date(USER_AUTH_EXPIRED_MILLIS))
+                .setExpiration(new Date(System.currentTimeMillis() + USER_AUTH_EXPIRED_MILLIS))
                 .claim("id", userId)
                 .signWith(SignatureAlgorithm.HS256, signingKey)
                 .compact();
@@ -43,6 +43,7 @@ public class JwtUtil {
     /**
      * socket connect 인증용 토큰
      * 만료시간 : 30초
+     *
      * @return
      */
     public String createConnectToken() {
@@ -50,7 +51,7 @@ public class JwtUtil {
         byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(SECRET_KEY);
         Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
         return Jwts.builder()
-                .setExpiration(new Date(CONNECT_EXPIRED_MILLIS))
+                .setExpiration(new Date(System.currentTimeMillis() + CONNECT_EXPIRED_MILLIS))
                 .signWith(SignatureAlgorithm.HS256, signingKey)
                 .claim("uuid", UUID.randomUUID().toString()) // TODO: 2020-09-21  길이 짧은 토큰 발급이 좋을듯
                 .compact();

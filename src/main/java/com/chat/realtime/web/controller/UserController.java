@@ -24,16 +24,16 @@ import java.util.Map;
 @RestController
 public class UserController {
 
-    private final SimpUserRegistry simpUserRegistry;
-
     private final UserService userService;
+    private final SimpUserRegistry userRegistry;
 
     @PostMapping("/login")
     public UserSaveResponseDto login(@RequestBody UserSaveRequestDto requestDto) {
         UserSaveResponseDto responseDto = userService.login(requestDto);
+        log.info("login =======================================================" + userRegistry.getUsers().toString());
+        log.info("login =======================================================" + TokenMapper.getInstance().toString());
         TokenMapper.set(responseDto.getConnectToken(), responseDto.getAuthToken());
-        // TODO: 2020-09-21 개발 임시 
-        //TokenMapper.set("CONNECT_TOKEN" , "SUPER_TOKEN");
+
         return responseDto;
     }
 
@@ -48,7 +48,6 @@ public class UserController {
         Map<String, Object> sessionAttributes = headerAccessor.getSessionAttributes();
         sessionAttributes.put("sessionId", sessionId);
         sessionAttributes.put("token", token);
-        log.info("userRegistry : " + simpUserRegistry.getUsers().toString());
 
         return UserSessionResponseDto.builder()
                 .dataType(DataType.SESSION_VALUE.getDataType())
@@ -61,7 +60,6 @@ public class UserController {
     @MessageMapping("/userList/get")
     @SendTo("/topic/user")
     public UserListResponseDto userList(SimpMessageHeaderAccessor headerAccessor) {
-        log.info("simpUserRegistry.getUsers().toString()" + simpUserRegistry.getUsers().toString());
-        return userService.findAll();
+        return userService.findCurrentUserList();
     }
 }

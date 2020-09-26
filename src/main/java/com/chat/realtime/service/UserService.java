@@ -11,11 +11,16 @@ import com.chat.realtime.web.util.JwtUtil;
 import com.chat.realtime.web.util.SHA256Util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.simp.user.SimpUser;
+import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -27,6 +32,8 @@ public class UserService {
     private final SHA256Util sha256Util;
 
     private final UserRepository userRepository;
+
+    private final SimpUserRegistry simpUserRegistry;
 
     @Transactional
     public UserSaveResponseDto login(UserSaveRequestDto requestDto) {
@@ -45,7 +52,10 @@ public class UserService {
         Optional<User> loginUser = userRepository.findByUserIdAndPassword(userId, password);
         if (loginUser.isPresent()) {
             loginUser.get().update(newToken, jwtUtil.getExpiredTime(newToken));
-            return new UserSaveResponseDto(loginUser.get(), jwtUtil.createConnectToken());
+            log.info("기존 로그인 유저 ====================== ");
+            String connectToken = jwtUtil.createConnectToken();
+            log.info("connectToken ======================" + connectToken);
+            return new UserSaveResponseDto(loginUser.get(), connectToken);
         } else if (isJoinedUser(userId)) {
             throw new CommonException(401, "비밀번호 확인");
         } else {
@@ -62,10 +72,18 @@ public class UserService {
         }
     }
 
-    public UserListResponseDto findAll() {
+    public UserListResponseDto findCurrentUserList() {
+        log.info("userRegistry == " + simpUserRegistry.getUsers().toString());
+        Set<SimpUser> usersSet = simpUserRegistry.getUsers();
+        List<String> tokens = new ArrayList<>();
+
+        for (SimpUser user : usersSet) {
+            tokens.add(user.getName());
+        }
+
         return UserListResponseDto.builder()
                 .dataType(DataType.CONNECTED_USER_LIST.getDataType())
-                .users(userRepository.findAll())
+                .users(userRepository.findAllByUserTokenIn(tokens))
                 .build();
     }
 

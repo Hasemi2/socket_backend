@@ -44,9 +44,10 @@ public class HandshakeHandler extends DefaultHandshakeHandler {
 
         RoleUser user = new RoleUser(authToken); // 유저 권한 생성후
         TokenMapper.remove(connectToken); //해당 임시 토큰 데이터 삭제
-
         log.info("after : " + TokenMapper.getInstance().toString());
-        return new RoleUser(authToken);
+        return user;
 
     }
+
+
 }
