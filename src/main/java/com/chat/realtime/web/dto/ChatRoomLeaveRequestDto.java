@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ChatRoomLeaveRequestDto {
 
-    private String roomId;
+    private Long roomId;
     private String userToken;
 
     @Builder
-    public ChatRoomLeaveRequestDto(String roomId, String userToken) {
+    public ChatRoomLeaveRequestDto(Long roomId, String userToken) {
         this.roomId = roomId;
         this.userToken = userToken;
     }

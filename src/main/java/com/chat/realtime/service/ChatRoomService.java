@@ -27,7 +27,10 @@ public class ChatRoomService {
 
     @Transactional
     public ChatRoomListResponseDto findRoomLists(String userToken) {
-        String myId = userRepository.findByUserToken(userToken).get().getUserId();
+        String myId = userRepository.findByUserToken(userToken)
+                .orElseThrow(() -> new CommonException(404, "사용자 정보가 없습니다."))
+                .getUserId();
+
         return ChatRoomListResponseDto.builder()
                 .dataType(DataType.GET_ROOM_LIST.getDataType())
                 .rooms(chatRoomRepository.findByUserId(myId))
@@ -39,20 +42,23 @@ public class ChatRoomService {
 
         ChatRoom chatRoom = chatRoomRepository.save(ChatRoom.builder().build());
 
-        String myId = userRepository.findByUserToken(requestDto.getUserToken()).get().getUserId();
+        String myId = userRepository.findByUserToken(requestDto.getUserToken())
+                .orElseThrow(() -> new CommonException(404, "사용자 정보가 없습니다."))
+                .getUserId();
+
         String receiverId = requestDto.getReceiver();
 
         userChatRoomRepository.save(
                 UserChatRoom.builder()
                         .room(chatRoom)
-                        .user(userRepository.findByUserId(myId).orElseThrow(() -> new CommonException(400, "사용자 정보가 없습니다.")))
+                        .user(userRepository.findByUserId(myId).orElseThrow(() -> new CommonException(404, "사용자 정보가 없습니다.")))
                         .build()
         );
 
         userChatRoomRepository.save(
                 UserChatRoom.builder()
                         .room(chatRoom)
-                        .user(userRepository.findByUserId(receiverId).orElseThrow(() -> new CommonException(400, "사용자 정보가 없습니다.")))
+                        .user(userRepository.findByUserId(receiverId).orElseThrow(() -> new CommonException(404, "사용자 정보가 없습니다.")))
                         .build()
         );
 
@@ -69,13 +75,25 @@ public class ChatRoomService {
     }
 
     @Transactional
+    public String findReceiverToken(String receiver) {
+        return userRepository.findByUserId(receiver).orElseThrow(() -> new CommonException(404, "사용자 정보가 없습니다.")).getUserToken();
+    }
+
+    @Transactional
     public ChatRoomLeaveResponseDto leaveRoom(ChatRoomLeaveRequestDto requestDto) {
         //매핑 테이블 삭제
+        String userId = userRepository
+                .findByUserToken(requestDto.getUserToken())
+                .orElseThrow(() -> new CommonException(404, "사용자 정보가 없습니다."))
+                .getUserId();
+        userChatRoomRepository.deleteByUserIdAndRoomId(userId, requestDto.getRoomId());
 
-        //매핑테이블에 조회 안될시 roomtable delete
-
-        //채팅방 정보-> 채팅방 아이디, 채팅방 참여인원등의 정보 || 참여인원이 0명일시 null 리턴
-        
-        return null;
+        return ChatRoomLeaveResponseDto.builder()
+                .dataType(DataType.LEAVE_ROOM.getDataType())
+                .data(ChatRoomLeaveResponseDto.Data.builder().leaverId(userId).roomId(requestDto.getRoomId()).build())
+                .build();
     }
+
 }
+
+

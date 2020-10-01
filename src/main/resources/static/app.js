@@ -1,4 +1,5 @@
 var stompClient = null;
+var token = null;
 
 //Socket 연결 *********************************************************************
 function login() {
@@ -27,13 +28,15 @@ function connect(res) {
     //여기서 인증정보 넣고여기서
     var socket = new SockJS('/test?connect_token=' + res.connectToken);
     stompClient = Stomp.over(socket);
+    token = res.authToken;
     stompClient.connect({"Authorization" : res.authToken} , onConnected, onError)
 
 }
 
 function onConnected(payload) {
     console.log("onConnected " , payload);
-    ChatRoomAll(); //모든 채팅방 리스트 호출
+
+    ChatRoomAll(token); //모든 채팅방 리스트 호출
 
 }
 
@@ -53,19 +56,12 @@ function onError(error) {
 
 //todo 0825  구현 필요
 //user 인증 값 불필요1
-function ChatRoomAll(){
-   console.log("ChatRoomAll ============================== ")
+function ChatRoomAll(token){
+   console.log("ChatRoomAll ============================== " , token)
    //구독
-   stompClient.subscribe('/topic/user', onChatRoomAllReceived);
-    // Tell your username to the server
-    //todo :요기서 data를 넘겨서 컨트롤러에서 받는게 안됩니다. 왜죠?
-    //(void) send(destination, headers = {} , body = '')
-//    stompClient.send("/user/sessionId/get" ,
-//        {"Authorization" : "eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MDAwMDIzMTYsImlkIjoiaGFzZW1pIn0.XII2Z6X96oUma1Uc0uyGp68OuZT840U1ny3sT0f_PCE" } ,
-//       {});
-
-    stompClient.send("/user/userList/get" ,
-           {"Authorization" : "eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MDAwMDIzMTYsImlkIjoiaGFzZW1pIn0.XII2Z6X96oUma1Uc0uyGp68OuZT840U1ny3sT0f_PCE" } ,
+   stompClient.subscribe('/topic/room', onChatRoomAllReceived);
+    stompClient.send("/room/roomList/get" ,
+           {"Authorization" : token } ,
        {});
 }
 

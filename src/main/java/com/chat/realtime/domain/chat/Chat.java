@@ -1,22 +1,34 @@
 package com.chat.realtime.domain.chat;
 
+import com.chat.realtime.domain.BaseTimeEntity;
+import com.chat.realtime.domain.room.ChatRoom;
+import com.chat.realtime.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@ToString
-@NoArgsConstructor
+import javax.persistence.*;
+
 @Getter
-public class Chat {
+@NoArgsConstructor
+@Table(name = "TB_CHAT_CONTENT")
+@Entity
+public class Chat extends BaseTimeEntity {
 
-    private String name;
-    private String message;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long chatContentId;
 
-    @Builder
-    public Chat(String name, String message) {
-        this.name = name;
-        this.message = message;
-    }
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "user_id")
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "room_id", nullable = false)
+    private ChatRoom room;
+
+    @Column(columnDefinition = "TEXT", nullable = false)
+    private String chatContent;
 
 }
