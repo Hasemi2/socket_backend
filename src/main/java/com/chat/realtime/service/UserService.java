@@ -52,12 +52,10 @@ public class UserService {
         Optional<User> loginUser = userRepository.findByUserIdAndPassword(userId, password);
         if (loginUser.isPresent()) {
             loginUser.get().update(newToken, jwtUtil.getExpiredTime(newToken));
-            log.info("기존 로그인 유저 ====================== ");
             String connectToken = jwtUtil.createConnectToken();
-            log.info("connectToken ======================" + connectToken);
             return new UserSaveResponseDto(loginUser.get(), connectToken);
         } else if (isJoinedUser(userId)) {
-            throw new CommonException(401, "비밀번호 확인");
+            throw new CommonException(400 , "비밀번호 확인");
         } else {
             return new UserSaveResponseDto(
                     userRepository.save(
@@ -73,7 +71,6 @@ public class UserService {
     }
 
     public UserListResponseDto findCurrentUserList() {
-        log.info("userRegistry == " + simpUserRegistry.getUsers().toString());
         Set<SimpUser> usersSet = simpUserRegistry.getUsers();
         List<String> tokens = new ArrayList<>();
 
