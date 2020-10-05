@@ -1,7 +1,7 @@
 package com.chat.realtime.web.handler;
 
 import com.chat.realtime.web.connect.TokenMapper;
-import com.chat.realtime.web.controller.RoleUser;
+import com.chat.realtime.web.connect.RoleUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServletServerHttpRequest;

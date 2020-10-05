@@ -1,5 +1,6 @@
 package com.chat.realtime.service;
 
+import com.chat.realtime.domain.chat.ChatRepository;
 import com.chat.realtime.domain.mapping.UserChatRoom;
 import com.chat.realtime.domain.mapping.UserChatRoomRepository;
 import com.chat.realtime.domain.room.ChatRoom;
@@ -25,6 +26,9 @@ public class ChatRoomService {
 
     private final UserChatRoomRepository userChatRoomRepository;
 
+    private final ChatRepository chatRepository;
+
+
     @Transactional
     public ChatRoomListResponseDto findRoomLists(String userToken) {
         String myId = userRepository.findByUserToken(userToken)
@@ -33,7 +37,7 @@ public class ChatRoomService {
 
         return ChatRoomListResponseDto.builder()
                 .dataType(DataType.GET_ROOM_LIST.getDataType())
-                .rooms(chatRoomRepository.findByUserId(myId))
+                .rooms(chatRoomRepository.findAllByUserId(myId))
                 .build();
     }
 
@@ -94,6 +98,13 @@ public class ChatRoomService {
                 .build();
     }
 
+    @Transactional
+    public ChatRoomEnterResponseDto findChatByRoomId(String roomId) {
+        return ChatRoomEnterResponseDto.builder()
+                .dataType(DataType.ENTER_ROOM.getDataType())
+                .data(chatRepository.findAllByRoomId(Long.parseLong(roomId)))
+                .build();
+    }
 }
 
 

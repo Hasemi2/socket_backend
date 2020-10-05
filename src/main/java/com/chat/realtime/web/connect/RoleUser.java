@@ -1,4 +1,4 @@
-package com.chat.realtime.web.controller;
+package com.chat.realtime.web.connect;
 
 import java.security.Principal;
 

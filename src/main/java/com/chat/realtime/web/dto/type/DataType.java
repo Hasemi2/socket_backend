@@ -12,7 +12,8 @@ public enum DataType {
     ADD_ROOM("ADD_ROOM"),
     LEAVE_ROOM("LEAVE_ROOM"),
     CHAT_MESSAGE("CHAT_MESSAGE"),
-    SESSION_VALUE("SESSION_VALUE");
+    SESSION_VALUE("SESSION_VALUE"),
+    ENTER_ROOM("ENTER_ROOM");
 
     private final String dataType;
 }

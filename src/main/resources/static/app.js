@@ -59,14 +59,17 @@ function onError(error) {
 function ChatRoomAll(token){
    console.log("ChatRoomAll ============================== " , token)
    //구독
-   stompClient.subscribe('/topic/room', onChatRoomAllReceived);
-    stompClient.send("/room/roomList/get" ,
+   var roomId = 1;
+
+   stompClient.subscribe('/topic/room/' + roomId, onChatRoomAllReceived);
+    stompClient.send("/room/enter/" + roomId ,
            {"Authorization" : token } ,
-       {});
+           {"roomId"  : roomId }
+       );
 }
 
 function onChatRoomAllReceived(payload){
-    console.log("onChatRoomAllReceived=======================");
+    console.log("onChatRoomAllReceived=======================" , payload);
     var rooms = JSON.parse(payload.body);
     console.log(rooms);
 }
