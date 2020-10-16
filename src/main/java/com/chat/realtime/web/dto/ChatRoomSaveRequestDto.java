@@ -2,9 +2,7 @@ package com.chat.realtime.web.dto;
 
 import lombok.*;
 
-@Setter
-@ToString
-@Getter
+@Data
 @NoArgsConstructor
 public class ChatRoomSaveRequestDto {
 
@@ -15,6 +13,5 @@ public class ChatRoomSaveRequestDto {
     public ChatRoomSaveRequestDto(String receiver) {
         this.receiver = receiver;
     }
-
 
 }

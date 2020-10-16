@@ -59,7 +59,6 @@ public class ChatRoomController {
         log.info(requestDto.toString());
         ChatRoomSaveResponseDto responseDto = chatRoomService.addRoom(requestDto);
         String receiverToken = chatRoomService.findReceiverToken(requestDto.getReceiver());
-        //이게 되나?
         messagingTemplate.convertAndSendToUser(receiverToken, "/topic/room", responseDto); //receiver broadcast
         return responseDto;
     }

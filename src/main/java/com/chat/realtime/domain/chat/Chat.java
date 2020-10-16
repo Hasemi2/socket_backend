@@ -6,7 +6,6 @@ import com.chat.realtime.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import javax.persistence.*;
 
@@ -31,4 +30,10 @@ public class Chat extends BaseTimeEntity {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String chatContent;
 
+    @Builder
+    public Chat(User user, ChatRoom room, String chatContent) {
+        this.user = user;
+        this.room = room;
+        this.chatContent = chatContent;
+    }
 }

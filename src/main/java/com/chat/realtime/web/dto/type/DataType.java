@@ -16,4 +16,4 @@ public enum DataType {
     ENTER_ROOM("ENTER_ROOM");
 
     private final String dataType;
-}
+};
