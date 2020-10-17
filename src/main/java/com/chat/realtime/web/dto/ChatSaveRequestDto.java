@@ -6,7 +6,6 @@ import com.chat.realtime.domain.user.User;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.tomcat.jni.Local;
 
 @Data
 @NoArgsConstructor

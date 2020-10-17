@@ -62,10 +62,12 @@ function ChatRoomAll(token){
    var roomId = 1;
 
    stompClient.subscribe('/topic/room/' + roomId, onChatRoomAllReceived);
-    stompClient.send("/room/enter/" + roomId ,
-           {"Authorization" : token } ,
-           {"roomId"  : roomId }
+   stompClient.send("/room/enter/" + roomId ,
+           {"Authorization" : token }
        );
+
+    onChatSave(roomId , token);
+
 }
 
 function onChatRoomAllReceived(payload){
@@ -74,7 +76,17 @@ function onChatRoomAllReceived(payload){
     console.log(rooms);
 }
 
+function onChatSave(roomId , token){
+   stompClient.subscribe('/topic/chat/', onChatSaveReceived);
+   stompClient.send('/chat/' + roomId + '/message/send',
+                      {"Authorization" : token } ,
+        JSON.stringify( {"message" : "hi"}));
 
+}
+
+function onChatSaveReceived(payload){
+    console.log("onChatSaveReceived ===================" , payload)
+}
 
 $(function () {
         $("form").on('submit' , function(e) {

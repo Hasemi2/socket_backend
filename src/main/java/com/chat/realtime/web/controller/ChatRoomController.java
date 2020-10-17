@@ -74,8 +74,8 @@ public class ChatRoomController {
     @SendTo("/topic/room/{roomId}")
     public void enter(@DestinationVariable String roomId, SimpMessageHeaderAccessor headerAccessor) {
         String token = headerAccessor.getFirstNativeHeader("Authorization");
-        //messagingTemplate.convertAndSend(format("/topic/room/%s", roomId), chatRoomService.findChatByRoomId(roomId));
-        messagingTemplate.convertAndSendToUser(token, format("/topic/room/%s", roomId), chatRoomService.findChatByRoomId(roomId));
+        messagingTemplate.convertAndSend(format("/topic/room/%s", roomId), chatRoomService.findChatByRoomId(roomId));
+        //messagingTemplate.convertAndSendToUser(token, format("/topic/room/%s", roomId), chatRoomService.findChatByRoomId(roomId));
     }
 
     /**
