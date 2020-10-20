@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final UserService userService;
-    private final SimpUserRegistry userRegistry;
 
     @PostMapping("/login")
     public UserSaveResponseDto login(@RequestBody UserSaveRequestDto requestDto) {
