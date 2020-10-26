@@ -1,10 +1,10 @@
 package com.chat.realtime.web;
 
-import com.chat.realtime.web.dto.UserListResponseDto;
 import com.chat.realtime.web.dto.UserSaveRequestDto;
+import com.chat.realtime.web.dto.UserSaveResponseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -27,10 +27,10 @@ import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -49,15 +49,9 @@ public class UserControllerTest {
     @Autowired
     ObjectMapper mapper;
 
-    private CompletableFuture<UserListResponseDto> completableFuture;
-
     private final String SUBSCRIBE_USER_LIST_ENDPOINT = "/topic/user";
     private final String SEND_USER_LIST_ENDPOINT = "/user/userList/get";
 
-    @Before
-    public void setup() {
-        completableFuture = new CompletableFuture<>();
-    }
 
     @Test
     public void loginTest() throws Exception {
@@ -76,33 +70,29 @@ public class UserControllerTest {
 
     @Test
     public void userListTest() throws Exception {
+        BlockingQueue<UserSaveResponseDto> blockingQueue = new ArrayBlockingQueue(1);
         WebSocketStompClient stompClient = new WebSocketStompClient(new SockJsClient(createTransportClient()));
         stompClient.setMessageConverter(new MappingJackson2MessageConverter());
-        StompSession stompSession = stompClient.connect("http://localhost:" + port + "/test?connect_token=SUPER_TOKEN", new StompSessionHandlerAdapter() {
-        }).get(1, TimeUnit.SECONDS);
+        StompSession stompSession = stompClient.connect("http://localhost:" + port + "/test?connect_token=SUPER_TOKEN", new StompSessionHandlerAdapter() {}).get(1, TimeUnit.SECONDS);
 
-        stompSession.subscribe(SUBSCRIBE_USER_LIST_ENDPOINT, new UserListStompFrameHandler());
-        stompSession.send(SEND_USER_LIST_ENDPOINT, new StompHeaders());
+        stompSession.subscribe(SUBSCRIBE_USER_LIST_ENDPOINT, new StompFrameHandler() {
+            @Override
+            public Type getPayloadType(StompHeaders stompHeaders) {
+                return UserSaveResponseDto.class;
+            }
 
-        UserListResponseDto responseDto = completableFuture.get();
+            @Override
+            public void handleFrame(StompHeaders stompHeaders, Object o) {
+                System.out.println("handleFrame ============ " + o.toString());
+                blockingQueue.add((UserSaveResponseDto) o);
+            }
+        });
 
-        assertNotNull(responseDto);
+        stompSession.send(SEND_USER_LIST_ENDPOINT, null);
+        Assertions.assertNotNull(blockingQueue.poll(1, TimeUnit.SECONDS));
     }
 
     private List<Transport> createTransportClient() {
         return Collections.singletonList(new WebSocketTransport(new StandardWebSocketClient()));
-    }
-
-    private class UserListStompFrameHandler implements StompFrameHandler {
-
-        @Override
-        public Type getPayloadType(StompHeaders stompHeaders) {
-            return UserListResponseDto.class;
-        }
-
-        @Override
-        public void handleFrame(StompHeaders stompHeaders, Object o) {
-            completableFuture.complete((UserListResponseDto) o);
-        }
     }
 }

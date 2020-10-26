@@ -70,6 +70,7 @@ public class UserService {
         }
     }
 
+    @Transactional
     public UserListResponseDto findCurrentUserList() {
         Set<SimpUser> usersSet = simpUserRegistry.getUsers();
         List<String> tokens = new ArrayList<>();

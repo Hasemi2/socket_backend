@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface ChatRoomRepository extends JpaRepository<ChatRoom , Long> {
 
-    @Query(value = "SELECT TCR.* FROM TB_CHAT_ROOM TCR JOIN TB_CHAT_USER_MAPPING MA ON MA.USER_ID =:userId", nativeQuery = true)
+    @Query(value = "SELECT  TCR.* FROM TB_CHAT_ROOM TCR WHERE TCR.room_id  in \n" +
+            "(select MA.room_id from tb_chat_user_mapping MA WHERE MA.user_id=:userId)", nativeQuery = true)
     List<ChatRoom> findAllByUserId(@Param("userId") String myId);
 }

@@ -61,16 +61,18 @@ function ChatRoomAll(token){
    //구독
    var roomId = 1;
 
-   stompClient.subscribe('/topic/room/' + roomId, onChatRoomAllReceived);
-   stompClient.send("/room/enter/" + roomId ,
-           {"Authorization" : token }
+   stompClient.subscribe('/user/topic/room' , onChatRoomAllReceived);
+   stompClient.send("/room/roomList/get" ,
+           {"Authorization" : token } ,
+           {}
        );
 
-    onChatSave(roomId , token);
+   // onChatSave(roomId , token);
 
 }
 
 function onChatRoomAllReceived(payload){
+    console.log("in========================================")
     console.log("onChatRoomAllReceived=======================" , payload);
     var rooms = JSON.parse(payload.body);
     console.log(rooms);

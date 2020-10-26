@@ -26,6 +26,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void configureMessageBroker(MessageBrokerRegistry config) {
         //메시지 브로커는 특정 주제를 구독 한 연결된 모든 클라이언트에게 메시지를 broadcast 합니다.
         config.enableSimpleBroker("/topic");
+        config.setUserDestinationPrefix("/user");
         config.setApplicationDestinationPrefixes("/room", "/user", "/chat"); //클라이언트에서 메세지 송신시 붙여줄 prefix publish개념
     }
 
