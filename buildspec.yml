@@ -14,7 +14,7 @@ phases:
       - pwd
 artifacts:
   files:
-    - build/libs/*.jar
+    - target/*.jar
   discard-paths: yes
 cache: # 여기에 지정된 위치의 파일들을 S3에 캐시파일로 등록
   paths:
