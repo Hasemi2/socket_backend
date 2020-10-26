@@ -60,27 +60,27 @@ public class ChatControllerTest {
 
     private UUID testUserId;
 
-    @Before
-    public void setup() {
-        completableFuture = new CompletableFuture<>();
-
-        User user = User.builder().userId("chattest").password("test1234").userToken("SUPER_TOKEN").build();
-        ChatRoom room = ChatRoom.builder().roomId((long)1).build();
-
-        userRepository.save(user);
-        chatRoomRepository.save(room);
-
-        testUserId = user.getUserPk();
-        System.out.println("setup =============== " + testUserId);
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        System.out.println("After =============== " + testUserId);
-        userRepository.deleteAll();
-        chatRoomRepository.deleteAll();
-        chatRepository.deleteAll();
-    }
+//    @Before
+//    public void setup() {
+//        completableFuture = new CompletableFuture<>();
+//
+//        User user = User.builder().userId("chattest").password("test1234").userToken("SUPER_TOKEN").build();
+//        ChatRoom room = ChatRoom.builder().roomId((long)1).build();
+//
+//        userRepository.save(user);
+//        chatRoomRepository.save(room);
+//
+//        testUserId = user.getUserPk();
+//        System.out.println("setup =============== " + testUserId);
+//    }
+//
+//    @After
+//    public void tearDown() throws Exception {
+//        System.out.println("After =============== " + testUserId);
+//        userRepository.deleteAll();
+//        chatRoomRepository.deleteAll();
+//        chatRepository.deleteAll();
+//    }
 
 
     @Test
