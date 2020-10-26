@@ -1,0 +1,17 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto8
+  build:
+    commands:
+      - echo Build started on `date`
+      - mvn test
+  post_build:
+    commands:
+      - echo $(basename ./build/libs/*.jar)
+      - pwd
+cache: # 여기에 지정된 위치의 파일들을 S3에 캐시파일로 등록
+  paths:
+    - '/root/.m2/**/*'
