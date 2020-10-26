@@ -60,63 +60,63 @@ public class ChatRoomControllerTest {
 
     @Test
     public void roomListsTest() throws Exception {
-        String id = "hasemi";
-        String password = "1234";
-
-        UserSaveRequestDto requestDto = UserSaveRequestDto.builder().userId(id).password(password).build();
-
-        MvcResult result = mvc.perform(post("/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(requestDto)))
-                .andDo(print())
-                .andReturn();
-
-        String strResult = result.getResponse().getContentAsString();
-        Map<String, String> resultMap = mapper.readValue(strResult, Map.class);
-
-        System.out.println("resultMap ===== " + resultMap.toString());
-
-        String authToken = resultMap.get("authToken");
-        String connectToken = resultMap.get("connectToken");
-
-        BlockingQueue<ChatRoomListResponseDto> blockingQueue = new ArrayBlockingQueue(1);
-        WebSocketStompClient stompClient = new WebSocketStompClient(new SockJsClient(createTransportClient()));
-        stompClient.setMessageConverter(new MappingJackson2MessageConverter());
-
-        StompHeaders nativeHeaders = new StompHeaders();
-        nativeHeaders.set("Authorization", authToken);
-
-        StompSession stompSession = stompClient.connect("http://localhost:" + port + "/test?connect_token=" + connectToken , new StompSessionHandlerAdapter() {
-        }).get(1, TimeUnit.SECONDS);
-
-        if (stompSession.isConnected()) {
-            System.out.println("stompSession.isConnected() ============================= ");
-            stompSession.subscribe(SUBSCRIBE_ROOM_URL, new StompFrameHandler() {
-                @Override
-                public Type getPayloadType(StompHeaders stompHeaders) {
-                    System.out.println("getPayloadType ============================= " + stompHeaders.toString());
-                    return ChatRoomListResponseDto.class;
-                }
-
-                @Override
-                public void handleFrame(StompHeaders stompHeaders, Object o) {
-                    System.out.println("handleFrame" + o.toString());
-                    blockingQueue.add((ChatRoomListResponseDto) o);
-                }
-
-
-            });
-
-            StompHeaders headers = new StompHeaders();
-            headers.set("Authorization", authToken);
-            headers.setDestination(SEND_ROOM_LIST_URL);
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            stompSession.send(headers, null);
-            System.out.println("stompSession.isConnected() ============================= " + stompSession.isConnected());
-
-        } else {
-            System.out.println("stompSession.isClosed() ============================= ");
-        }
+//        String id = "hasemi";
+//        String password = "1234";
+//
+//        UserSaveRequestDto requestDto = UserSaveRequestDto.builder().userId(id).password(password).build();
+//
+//        MvcResult result = mvc.perform(post("/login")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(mapper.writeValueAsString(requestDto)))
+//                .andDo(print())
+//                .andReturn();
+//
+//        String strResult = result.getResponse().getContentAsString();
+//        Map<String, String> resultMap = mapper.readValue(strResult, Map.class);
+//
+//        System.out.println("resultMap ===== " + resultMap.toString());
+//
+//        String authToken = resultMap.get("authToken");
+//        String connectToken = resultMap.get("connectToken");
+//
+//        BlockingQueue<ChatRoomListResponseDto> blockingQueue = new ArrayBlockingQueue(1);
+//        WebSocketStompClient stompClient = new WebSocketStompClient(new SockJsClient(createTransportClient()));
+//        stompClient.setMessageConverter(new MappingJackson2MessageConverter());
+//
+//        StompHeaders nativeHeaders = new StompHeaders();
+//        nativeHeaders.set("Authorization", authToken);
+//
+//        StompSession stompSession = stompClient.connect("http://localhost:" + port + "/test?connect_token=" + connectToken , new StompSessionHandlerAdapter() {
+//        }).get(1, TimeUnit.SECONDS);
+//
+//        if (stompSession.isConnected()) {
+//            System.out.println("stompSession.isConnected() ============================= ");
+//            stompSession.subscribe(SUBSCRIBE_ROOM_URL, new StompFrameHandler() {
+//                @Override
+//                public Type getPayloadType(StompHeaders stompHeaders) {
+//                    System.out.println("getPayloadType ============================= " + stompHeaders.toString());
+//                    return ChatRoomListResponseDto.class;
+//                }
+//
+//                @Override
+//                public void handleFrame(StompHeaders stompHeaders, Object o) {
+//                    System.out.println("handleFrame" + o.toString());
+//                    blockingQueue.add((ChatRoomListResponseDto) o);
+//                }
+//
+//
+//            });
+//
+//            StompHeaders headers = new StompHeaders();
+//            headers.set("Authorization", authToken);
+//            headers.setDestination(SEND_ROOM_LIST_URL);
+//            headers.setContentType(MediaType.APPLICATION_JSON);
+//            stompSession.send(headers, null);
+//            System.out.println("stompSession.isConnected() ============================= " + stompSession.isConnected());
+//
+//        } else {
+//            System.out.println("stompSession.isClosed() ============================= ");
+//        }
 
 
         // Assertions.assertNotNull(blockingQueue.poll(1,TimeUnit.SECONDS));
