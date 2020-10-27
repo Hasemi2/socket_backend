@@ -17,7 +17,7 @@ artifacts:
     - target/*.jar
     - appspec.yml
     - scripts/**
-  discard-paths: yes
+  discard-paths: yes #file path를 버리고 파일만 가져갈지 설정
 cache: # 여기에 지정된 위치의 파일들을 S3에 캐시파일로 등록
   paths:
     - '/root/.m2/**/*'
