@@ -1,28 +1,31 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
-REPOSITORY=/home/ubuntu/build
-PROJECT_NAME=freelec-springboot2-webservice
+BUILD_PATH=$(ls /home/ubuntu/build/*.jar)
+JAR_NAME=$(basename $BUILD_PATH)
+echo "> build 파일명: $JAR_NAME"
 
-echo "> Build 파일 복사"
-echo "> cp $REPOSITORY/zip/*.jar $REPOSITORY/"
+echo "> build 파일 복사"
+DEPLOY_PATH=/home/ubuntu/
+cp $BUILD_PATH $DEPLOY_PATH
 
-cp $REPOSITORY/zip/*.jar $REPOSITORY/
+echo "> springboot-deploy.jar 교체"
+CP_JAR_PATH=$DEPLOY_PATH$JAR_NAME
+APPLICATION_JAR_NAME=springboot-deploy.jar
+APPLICATION_JAR=$DEPLOY_PATH$APPLICATION_JAR_NAME
 
-echo "> 새 어플리케이션 배포"
-JAR_NAME=$(ls -tr $REPOSITORY/*.jar | tail -n 1)
+ln -Tfs $CP_JAR_PATH $APPLICATION_JAR
 
-echo "> JAR Name: $JAR_NAME"
+echo "> 현재 실행중인 애플리케이션 pid 확인"
+CURRENT_PID=$(pgrep -f $APPLICATION_JAR_NAME)
 
-echo "> $JAR_NAME 에 실행권한 추가"
+if [ -z $CURRENT_PID ]
+then
+  echo "> 현재 구동중인 애플리케이션이 없으므로 종료하지 않습니다."
+else
+  echo "> kill -15 $CURRENT_PID"
+  kill -15 $CURRENT_PID
+  sleep 5
+fi
 
-chmod +x $JAR_NAME
-
-echo "> $JAR_NAME 실행"
-
-IDLE_PROFILE=$(find_idle_profile)
-
-echo "> $JAR_NAME 를 profile=$IDLE_PROFILE 로 실행합니다."
-nohup java -jar \
-    -Dspring.config.location=classpath:/application.properties,classpath:/application-$IDLE_PROFILE.properties,/home/ec2-user/app/application-oauth.properties,/home/ec2-user/app/application-real-db.properties \
-    -Dspring.profiles.active=$IDLE_PROFILE \
-    $JAR_NAME > $REPOSITORY/nohup.out 2>&1 &
+echo "> $APPLICATION_JAR 배포"
+nohup java -jar $APPLICATION_JAR > /dev/null 2> /dev/null < /dev/null &

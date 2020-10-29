@@ -9,3 +9,14 @@ permissions:
     pattern: "**"
     owner: ubuntu # codedeploy에서 ec2 서버로 넘겨준 파일들을 모두 ec2-user 권한을 갖도록 한다
     group: ubuntu
+
+# hooks : CodeDeploy 배포단계에서 실행할 명령어
+hooks:
+  ApplicationStart:
+    - location: start.sh
+      timeout: 60
+      runas: ubuntu
+  ValidateService:
+    - location: health.sh
+      timeout: 60
+      runas: ubuntu
