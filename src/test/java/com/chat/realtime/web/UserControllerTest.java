@@ -40,59 +40,59 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class UserControllerTest {
 
-    @LocalServerPort
-    private int port;
-
-    @Autowired
-    private MockMvc mvc;
-
-    @Autowired
-    ObjectMapper mapper;
-
-    private final String SUBSCRIBE_USER_LIST_ENDPOINT = "/topic/user";
-    private final String SEND_USER_LIST_ENDPOINT = "/user/userList/get";
-
-
-    @Test
-    public void loginTest() throws Exception {
-        String id = "hasemi";
-        String password = "1234";
-
-        UserSaveRequestDto requestDto = UserSaveRequestDto.builder().userId(id).password(password).build();
-
-        mvc.perform(post("/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(requestDto)))
-                .andDo(print())
-                .andExpect(status().isOk());
-    }
-
-
-    @Test
-    public void userListTest() throws Exception {
-        BlockingQueue<UserSaveResponseDto> blockingQueue = new ArrayBlockingQueue(1);
-        WebSocketStompClient stompClient = new WebSocketStompClient(new SockJsClient(createTransportClient()));
-        stompClient.setMessageConverter(new MappingJackson2MessageConverter());
-        StompSession stompSession = stompClient.connect("http://localhost:" + port + "/test?connect_token=SUPER_TOKEN", new StompSessionHandlerAdapter() {}).get(1, TimeUnit.SECONDS);
-
-        stompSession.subscribe(SUBSCRIBE_USER_LIST_ENDPOINT, new StompFrameHandler() {
-            @Override
-            public Type getPayloadType(StompHeaders stompHeaders) {
-                return UserSaveResponseDto.class;
-            }
-
-            @Override
-            public void handleFrame(StompHeaders stompHeaders, Object o) {
-                System.out.println("handleFrame ============ " + o.toString());
-                blockingQueue.add((UserSaveResponseDto) o);
-            }
-        });
-
-        stompSession.send(SEND_USER_LIST_ENDPOINT, null);
-        Assertions.assertNotNull(blockingQueue.poll(1, TimeUnit.SECONDS));
-    }
-
-    private List<Transport> createTransportClient() {
-        return Collections.singletonList(new WebSocketTransport(new StandardWebSocketClient()));
-    }
+//    @LocalServerPort
+//    private int port;
+//
+//    @Autowired
+//    private MockMvc mvc;
+//
+//    @Autowired
+//    ObjectMapper mapper;
+//
+//    private final String SUBSCRIBE_USER_LIST_ENDPOINT = "/topic/user";
+//    private final String SEND_USER_LIST_ENDPOINT = "/user/userList/get";
+//
+//
+//    @Test
+//    public void loginTest() throws Exception {
+//        String id = "hasemi";
+//        String password = "1234";
+//
+//        UserSaveRequestDto requestDto = UserSaveRequestDto.builder().userId(id).password(password).build();
+//
+//        mvc.perform(post("/login")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(mapper.writeValueAsString(requestDto)))
+//                .andDo(print())
+//                .andExpect(status().isOk());
+//    }
+//
+//
+//    @Test
+//    public void userListTest() throws Exception {
+//        BlockingQueue<UserSaveResponseDto> blockingQueue = new ArrayBlockingQueue(1);
+//        WebSocketStompClient stompClient = new WebSocketStompClient(new SockJsClient(createTransportClient()));
+//        stompClient.setMessageConverter(new MappingJackson2MessageConverter());
+//        StompSession stompSession = stompClient.connect("http://localhost:" + port + "/test?connect_token=SUPER_TOKEN", new StompSessionHandlerAdapter() {}).get(1, TimeUnit.SECONDS);
+//
+//        stompSession.subscribe(SUBSCRIBE_USER_LIST_ENDPOINT, new StompFrameHandler() {
+//            @Override
+//            public Type getPayloadType(StompHeaders stompHeaders) {
+//                return UserSaveResponseDto.class;
+//            }
+//
+//            @Override
+//            public void handleFrame(StompHeaders stompHeaders, Object o) {
+//                System.out.println("handleFrame ============ " + o.toString());
+//                blockingQueue.add((UserSaveResponseDto) o);
+//            }
+//        });
+//
+//        stompSession.send(SEND_USER_LIST_ENDPOINT, null);
+//        Assertions.assertNotNull(blockingQueue.poll(1, TimeUnit.SECONDS));
+//    }
+//
+//    private List<Transport> createTransportClient() {
+//        return Collections.singletonList(new WebSocketTransport(new StandardWebSocketClient()));
+//    }
 }
