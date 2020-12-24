@@ -21,7 +21,6 @@ public class ChatController {
     @MessageMapping("/{roomId}/message/send")
     @SendTo("/topic/room/{roomId}") //해당방 유저들에게 브로드캐스트
     public ChatSaveResponseDto send(SimpMessageHeaderAccessor headerAccessor, @DestinationVariable String roomId, ChatSaveRequestDto chatSaveRequestDto) {
-        log.info("send=============================");
         String token = headerAccessor.getFirstNativeHeader("Authorization");
         chatSaveRequestDto.setRoomId(Long.parseLong(roomId));
         chatSaveRequestDto.setUserToken(token);
