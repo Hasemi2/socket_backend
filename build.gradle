@@ -16,11 +16,12 @@ repositories {
 }
 
 flyway {
-    url = 'jdbc:h2:mem:'
+    url = 'jdbc:h2:mem:chat;DB_CLOSE_DELAY=-1'
+    user = 'sa'
+    password = ''
     locations = [
             'classpath:db/migration'
     ]
-
 }
 
 dependencies {
@@ -37,6 +38,8 @@ dependencies {
     implementation 'org.webjars:stomp-websocket:2.3.3'
     implementation 'org.webjars:bootstrap:3.3.7'
     implementation 'org.webjars:jquery:3.1.1-1'
+   //implementation 'org.flywaydb:flyway-core'
+
     runtimeOnly 'org.springframework.boot:spring-boot-devtools:2.3.2.RELEASE'
     runtimeOnly group: 'com.h2database', name: 'h2', version: '1.4.193'
     testImplementation 'org.springframework.boot:spring-boot-starter-test:2.3.2.RELEASE'
@@ -50,7 +53,7 @@ dependencies {
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 description = 'socket-server'
-java.sourceCompatibility = JavaVersion.VERSION_1_8
+java.sourceCompatibility = JavaVersion.VERSION_11
 
 publishing {
     publications {

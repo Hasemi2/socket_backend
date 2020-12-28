@@ -4,6 +4,10 @@
     drop table if exists tb_chat_user;
     drop table if exists tb_chat_user_mapping;
 
+    create table test (
+        test bigint not null auto_increment
+    );
+
     create table tb_chat_content (
        chat_content_id bigint not null auto_increment,
         created_time datetime,

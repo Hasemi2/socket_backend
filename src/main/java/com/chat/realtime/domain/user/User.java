@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import sun.nio.cs.US_ASCII;
 
 import javax.persistence.*;
 import java.io.Serializable;
